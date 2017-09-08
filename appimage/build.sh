@@ -17,6 +17,7 @@ esac
 
 . ${top_srcdir}/appimage/functions.sh
 
+set -x
 
 for EXE in aranym aranym-mmu aranym-jit
 do
