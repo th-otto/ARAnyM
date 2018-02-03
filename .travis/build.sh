@@ -51,6 +51,24 @@ esac
 
 case "$TRAVIS_OS_NAME" in
 linux)
+	if false; then
+	if $build_jit; then
+	mkdir jit
+	cd jit
+	../configure $common_opts --enable-jit-compiler --enable-jit-fpu || exit 1
+	make depend
+	make || exit 1
+	cd ..
+	fi
+	
+	mkdir mmu
+	cd mmu
+	../configure $common_opts --enable-lilo --enable-fullmmu || exit 1
+	make depend
+	make || exit 1
+	cd ..
+	fi
+	
 	./configure $common_opts || exit 1
 	make depend
 	make || exit 1
@@ -59,6 +77,10 @@ linux)
 	sudo chown root "$BUILDROOT${bindir}/aratapif"
 	sudo chgrp root "$BUILDROOT${bindir}/aratapif"
 	sudo chmod 4755 "$BUILDROOT${bindir}/aratapif"
+	if $build_jit; then
+	install -s -m 755 jit/src/aranym "$BUILDROOT${bindir}/aranym-jit"
+	fi
+	install -s -m 755 mmu/src/aranym "$BUILDROOT${bindir}/aranym-mmu"
 
 	ARCHIVE="${PROJECT_LOWER}-${ATAG}.tar.xz"
 	(
