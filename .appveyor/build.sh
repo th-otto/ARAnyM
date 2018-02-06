@@ -88,6 +88,7 @@ function build() {
 	*) exit 1 ;;
 	esac
 	
+	if false; then
 	echo "configuring aranym-mmu..."
 	./configure $CONFIGURE_ARGS $sdloption --enable-fullmmu --enable-lilo 2>&1 || {
 		exit 1
@@ -112,6 +113,7 @@ function build() {
 	}
 	strip aranym.exe || exit 1
 	mv aranym.exe aranym-jit.exe
+	fi
 	
 	
 	echo "configuring aranym..."
@@ -179,7 +181,7 @@ function mkdist() {
 	save_IFS=$IFS
 	IFS='
 '
-	for f in aranym.exe aranym-jit.exe aranym-mmu.exe; do
+	for f in aranym.exe; do
 		cp -a "$f" "$distdir" || exit 1
 		dlls+=(`./ldd.exe --path $f`)
 	done
@@ -232,9 +234,9 @@ SDL=1
 build
 mkdist
 
-SDL=2
-build
-mkdist
+#SDL=2
+#build
+#mkdist
 
 
 rm -f ldd.exe
